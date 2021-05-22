@@ -51,8 +51,26 @@ const obj5 : { a: (b: number, c?: string)=> string} = {
 
 
 
+// never 에러로 만남
+// 배열을 잘못 만든 경우 
+const arr6: [] = [];
+// arr6.push(3)
+// (method) Array<never>.push(...items: never[]): number
 
 
+// any = javascript
+// 어쩔수없는경우에만 사용할것,
+const hi : any = [];
+
+
+//d.ts
+// const hello: number;
+// (<string><unknown> hello).substr(1,2);
+// (hello as unknown as string).substr(1,2);
+
+const div = document.createElement('div');
+const a2 = div as HTMLElement;
+const a3 = div as unknown as number;
 
 
 

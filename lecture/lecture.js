@@ -41,4 +41,19 @@ var obj5 = {
         return 'hello';
     }
 };
+// never 에러로 만남
+// 배열을 잘못 만든 경우 
+var arr6 = [];
+// arr6.push(3)
+// (method) Array<never>.push(...items: never[]): number
+// any = javascript
+// 어쩔수없는경우에만 사용할것,
+var hi = [];
+//d.ts
+// const hello: number;
+// (<string><unknown> hello).substr(1,2);
+// (hello as unknown as string).substr(1,2);
+var div = document.createElement('div');
+var a2 = div;
+var a3 = div;
 // 중복되기때문에 interface로 사용
