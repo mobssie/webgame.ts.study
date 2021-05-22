@@ -1,59 +1,66 @@
-var num;
-num = 3;
-var str = String(num);
-var arr1 = [1, 2, 3];
-var arr2 = [1, 2, 3];
-var arr3 = [1, 2, 3, '1', true];
-var arr4 = [1, '1', true]; // 더 업격하게 
-var str1 = 'hello'; // Tuple //수정 못한다.
-var arr = [true, 2, '3']; // Tuple //수정 못한다.
-var obj = { a: 'b' }; // Tuple 
-var obj1 = { a: 'b' }; //오브젝트엔 이렇게 잘 안씀
-var obj2 = { a: 'b', b: 3 };
-obj2.a = '3';
-var Color;
-(function (Color) {
-    Color[Color["Red"] = 0] = "Red";
-    Color[Color["Green"] = 1] = "Green";
-    Color[Color["Blue"] = 2] = "Blue";
-})(Color || (Color = {}));
-var c;
-Color[0] === 'Red';
-Color['Red'] === 0;
-var n1 = null;
-var n2 = undefined;
-// 함수를 적어주는 방법
-function f(a, b) {
-    return a + b;
-}
-// 함수에 리턴이 없을때 && return undefined 일때
-function add1(a, b) {
-    console.log(a, b);
-}
-// 고차함수 : 함수 자체를 타입으로 쓸때 (매개변수 리턴함수)
-function add2(a, b) {
-    return function (c) {
-        return 3;
-    };
-}
-var obj5 = {
-    a: function (b, c) {
-        return 'hello';
+var body = document.body;
+var candidate;
+var array = [];
+var arr = [1, 2];
+function chooseNumber() {
+    candidate = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    array = [];
+    for (var i = 0; i < 4; i += 1) {
+        var mobssie = candidate.splice(Math.floor(Math.random() * (9 - i)), 1)[0];
+        array.push(mobssie);
     }
-};
-// never 에러로 만남
-// 배열을 잘못 만든 경우 
-var arr6 = [];
-// arr6.push(3)
-// (method) Array<never>.push(...items: never[]): number
-// any = javascript
-// 어쩔수없는경우에만 사용할것,
-var hi = [];
-//d.ts
-// const hello: number;
-// (<string><unknown> hello).substr(1,2);
-// (hello as unknown as string).substr(1,2);
-var div = document.createElement('div');
-var a2 = div;
-var a3 = div;
-// 중복되기때문에 interface로 사용
+}
+chooseNumber();
+console.log(array);
+var result = document.createElement('h1');
+body.append(result);
+var form = document.createElement('form');
+document.body.append(form);
+var input = document.createElement('input');
+form.append(input);
+input.type = 'text';
+input.maxLength = 4;
+var button = document.createElement('button');
+button.textContent = '입력!';
+form.append(button);
+var wrongCount = 0;
+form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    var answer = input.value;
+    if (answer === array.join('')) { // 답이 맞으면
+        result.textContent = '홈런';
+        input.value = '';
+        input.focus();
+        chooseNumber();
+        wrongCount = 0;
+    }
+    else { // 답이 틀리면
+        var answerArray = answer.split('');
+        var strike = 0;
+        var ball = 0;
+        wrongCount += 1;
+        if (wrongCount > 10) { // 10번 넘게 틀린 경우
+            result.textContent = "10\uBC88 \uB118\uAC8C \uD2C0\uB824\uC11C \uC2E4\uD328! \uB2F5\uC740 " + array.join(',') + " \uC600\uC2B5\uB2C8\uB2E4!";
+            input.value = '';
+            input.focus();
+            chooseNumber();
+            wrongCount = 0;
+        }
+        else { // 10번 미만으로 틀린 경우
+            console.log('답이 틀리면', answerArray);
+            for (var i = 0; i <= 3; i += 1) {
+                if (Number(answerArray[i]) === array[i]) { // 같은 자리인지 확인
+                    console.log('같은 자리?');
+                    strike += 1;
+                }
+                else if (array.indexOf(Number(answerArray[i])) > -1) { // 같은 자리는 아니지만, 숫자가 겹치는지 확인
+                    console.log('겹치는 숫자?');
+                    ball += 1;
+                }
+            }
+            result.textContent = strike + "\uC2A4\uD2B8\uB77C\uC774\uD06C " + ball + "\uBCFC\uC785\uB2C8\uB2E4.";
+            input.value = '';
+            input.focus();
+        }
+    }
+});
