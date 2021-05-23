@@ -1,67 +1,78 @@
-const { body } = document;
-let candidate: number[];
-let array: number[] = [];
-const arr: [number, number] = [1,2];
-
-function chooseNumber() {
-  candidate = [1,2,3,4,5,6,7,8,9];
-  array = [];
-  for (let i: number = 0; i < 4; i += 1) {
-    const mobssie = candidate.splice(Math.floor(Math.random() * (9 - i)), 1)[0];
-    array.push(mobssie);
+interface RSP {
+    ROCK: '0';
+    SCISSORS: '-142px';
+    PAPER: '-284px';
   }
-}
-
-chooseNumber();
-console.log(array);
-
-const result = document.createElement('h1');
-body.append(result);
-const form = document.createElement('form');
-document.body.append(form);
-const input = document.createElement('input');
-form.append(input);
-input.type = 'text';
-input.maxLength = 4;
-const button = document.createElement('button');
-button.textContent = '입력!';
-form.append(button);
-
-let wrongCount = 0;
-form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const answer = input.value;
-    if (answer === array.join('')) { // 답이 맞으면
-        result.textContent = '홈런';
-        input.value = '';
-        input.focus();
-        chooseNumber();
-        wrongCount = 0;
-    } else { // 답이 틀리면
-        const answerArray = answer.split('');
-        let strike = 0;
-        let ball = 0;
-        wrongCount += 1;
-        if (wrongCount > 10) { // 10번 넘게 틀린 경우
-            result.textContent = `10번 넘게 틀려서 실패! 답은 ${array.join(',')} 였습니다!`;
-            input.value = '';
-            input.focus();
-            chooseNumber();
-            wrongCount = 0;
-          } else { // 10번 미만으로 틀린 경우
-            console.log('답이 틀리면', answerArray);
-            for (let i: number = 0; i <= 3; i += 1) {
-              if (Number(answerArray[i]) === array[i]) { // 같은 자리인지 확인
-                console.log('같은 자리?');
-                strike += 1;
-              } else if (array.indexOf(Number(answerArray[i])) > -1) { // 같은 자리는 아니지만, 숫자가 겹치는지 확인
-                console.log('겹치는 숫자?');
-                ball += 1;
-              }
-            }
-            result.textContent = `${strike}스트라이크 ${ball}볼입니다.`;
-            input.value = '';
-            input.focus();
-          }
+  
+  let imgCoords: RSP[keyof RSP] = '0';
+  const rsp: RSP = { // 딕셔너리 자료구조
+    ROCK: '0',
+    SCISSORS: '-142px',
+    PAPER: '-284px'
+  }; // as const도 설명
+  
+  function computerChoice(imgCoords: RSP[keyof RSP]) {
+    return (Object.keys(rsp) as ['ROCK', 'SCISSORS', 'PAPER']).find((k) => {
+      return rsp[k] === imgCoords;
+    });
+  }
+  
+  let interval: number;
+  function intervalMaker() {
+    interval = setInterval(function () {
+      if (imgCoords === rsp.ROCK) {
+        imgCoords = rsp.SCISSORS;
+      } else if (imgCoords === rsp.SCISSORS) {
+        imgCoords = rsp.PAPER;
+      } else {
+        imgCoords = rsp.ROCK;
+      }
+      if (document.querySelector('#computer')) {
+        (document.querySelector('#computer') as HTMLElement).style.background = 'url(https://en.pimg.jp/023/182/267/1/23182267.jpg) ' + imgCoords + ' 0';
+      }
+    }, 100);
+  }
+  
+  intervalMaker();
+  
+  const score = {
+    SCISSORS: 1,
+    ROCK: 0,
+    PAPER: -1,
+  };
+  
+  document.querySelectorAll('.btn').forEach((btn) => {
+   btn.addEventListener('click', function (this: HTMLButtonElement) {
+     clearInterval(interval); // setInterval 중지
+     setTimeout(() => {
+       intervalMaker();
+     }, 1000);
+     const myChoice = this.id as keyof RSP;
+     const myScore = score[myChoice];
+     const computerScore = score[computerChoice(imgCoords)!];
+     const diff = myScore - computerScore;
+     if (diff === 0) {
+       console.log('비겼습니다');
+     } else if ([-1, 2].includes(diff)) {
+       console.log('이겼습니다!!');
+     } else {
+       console.log('졌습니다 ㅠㅠ.');
+     }
+    });
+  });
+  
+  // SCISSORS: 1, ROCK: 0, PAPER: -1
+  // 나\컴퓨터    SCISSORS   ROCK    PAPER
+  //        SCISSORS   1 1    1 0   1 -1
+  //        ROCK   0 1    0 0   0 -1
+  //          PAPER  -1 1   -1 0  -1 -1
+  
+  let start = 3;
+  const interval2 = setInterval(function() {
+    if (start === 0) {
+      console.log('종료!!!');
+      return clearInterval(interval2);
     }
-});
+    console.log(start);
+    start -= 1;
+  }, 1000);
